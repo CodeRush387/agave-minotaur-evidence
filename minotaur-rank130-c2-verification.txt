@@ -1,0 +1,87 @@
+
+----------------------------------------
+define i64 @cut(i64 %n4, i1 %n5, i16 %n6) {
+entry:
+  switch i16 %n6, label %sink [
+    i16 23, label %b0
+    i16 24, label %b1
+  ]
+
+b1:
+  br i1 %n5, label %join, label %b2
+
+b2:
+  br label %join
+
+b0:
+  br label %join
+
+join:
+  %n0 = phi i64 [ %n4, %b1 ], [ %n4, %b2 ], [ 0, %b0 ]
+  %n1 = lshr i64 %n0, 1
+  %n2 = and i64 %n0, 1
+  %n3 = add nuw i64 %n1, %n2
+  ret i64 %n3
+
+sink:
+  assume i1 0
+}
+=>
+define i64 @cut(i64 %n4, i1 %n5, i16 %n6) {
+entry:
+  switch i16 %n6, label %sink [
+    i16 23, label %b0
+    i16 24, label %b1
+  ]
+
+b1:
+  br i1 %n5, label %join, label %b2
+
+b2:
+  br label %join
+
+b0:
+  br label %join
+
+join:
+  %n0 = phi i64 [ %n4, %b1 ], [ %n4, %b2 ], [ 0, %b0 ]
+  %n1 = lshr i64 %n0, 1
+  %r = sub i64 %n0, %n1
+  ret i64 %r
+
+sink:
+  assume i1 0
+}
+Transformation doesn't verify!
+
+ERROR: Value mismatch
+
+Example:
+i64 %n4 = undef
+i1 %n5 = #x0 (0)
+i16 %n6 = #x0018 (24)
+
+Source:
+  >> Jump to %b1
+  >> Jump to %b2
+  >> Jump to %join
+i64 %n0 = #x0000000000000003 (3)	[based on undef]
+i64 %n1 = #x0000000000000001 (1)	[based on undef]
+i64 %n2 = #x0000000000000001 (1)	[based on undef]
+i64 %n3 = #x0000000000000002 (2)	[based on undef]
+
+Target:
+  >> Jump to %b1
+  >> Jump to %b2
+  >> Jump to %join
+i64 %n0 = #x0000000000000004 (4)
+i64 %n1 = #x0000000000000002 (2)
+i64 %r = #xfffffffffffffffe (18446744073709551614, -2)
+Source value: #x0000000000000002 (2)	[based on undef]
+Target value: #xfffffffffffffffe (18446744073709551614, -2)
+
+Summary:
+  0 correct transformations
+  1 incorrect transformations
+  0 failed-to-prove transformations
+  0 Alive2 errors

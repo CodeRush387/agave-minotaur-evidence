@@ -1,0 +1,24 @@
+
+----------------------------------------
+define i1 @cut(i64 %n5, i16 %n6) {
+#0:
+  %n0 = umax i64 %n5, 4
+  %n1 = shl i64 %n0, 4
+  %n2 = icmp ugt i64 %n5, 1152921504606846975
+  %n3 = icmp ugt i64 %n1, 9223372036854775800
+  %n4 = or i1 %n2, %n3
+  ret i1 %n4
+}
+=>
+define i1 @cut(i64 %n5, i16 %n6) {
+#0:
+  %r = icmp ugt i64 %n5, 576460752303423487
+  ret i1 %r
+}
+Transformation seems to be correct!
+
+Summary:
+  1 correct transformations
+  0 incorrect transformations
+  0 failed-to-prove transformations
+  0 Alive2 errors

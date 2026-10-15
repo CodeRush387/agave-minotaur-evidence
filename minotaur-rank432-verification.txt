@@ -1,0 +1,24 @@
+
+----------------------------------------
+define i8 @cut(i64 %n4, i8 %n5, i16 %n6) {
+#0:
+  %n0 = icmp ne i64 %n4, 0
+  %n1 = trunc nuw i8 %n5 to i1
+  %n2 = or i1 %n0, %n1
+  %n3 = zext i1 %n2 to i8
+  ret i8 %n3
+}
+=>
+define i8 @cut(i64 %n4, i8 %n5, i16 %n6) {
+#0:
+  %n0 = icmp ne i64 %n4, 0
+  %r = select i1 %n0, i8 1, i8 %n5
+  ret i8 %r
+}
+Transformation seems to be correct!
+
+Summary:
+  1 correct transformations
+  0 incorrect transformations
+  0 failed-to-prove transformations
+  0 Alive2 errors

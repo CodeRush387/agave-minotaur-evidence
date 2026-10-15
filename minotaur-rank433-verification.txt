@@ -1,0 +1,21 @@
+
+----------------------------------------
+define i1 @cut(i64 %n3, i16 %n4) {
+#0:
+  %n0 = add nsw i64 %n3, -1
+  %n1 = lshr i64 %n0, 1
+  %n2 = icmp eq i64 %n1, %n3
+  ret i1 %n2
+}
+=>
+define i1 @cut(i64 %n3, i16 %n4) {
+#0:
+  ret i1 0
+}
+Transformation seems to be correct!
+
+Summary:
+  1 correct transformations
+  0 incorrect transformations
+  0 failed-to-prove transformations
+  0 Alive2 errors

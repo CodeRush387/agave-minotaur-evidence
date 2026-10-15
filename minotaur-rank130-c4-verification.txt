@@ -1,0 +1,23 @@
+
+----------------------------------------
+define i1 @cut(i64 %n3, i16 %n4) {
+#0:
+  %n0 = umax i64 %n3, 4
+  %n1 = shl i64 %n0, 4
+  %n2 = icmp ugt i64 %n1, 9223372036854775800
+  ret i1 %n2
+}
+=>
+define i1 @cut(i64 %n3, i16 %n4) {
+#0:
+  %s = lshr i64 %n3, 59
+  %r = trunc i64 %s to i1
+  ret i1 %r
+}
+Transformation seems to be correct!
+
+Summary:
+  1 correct transformations
+  0 incorrect transformations
+  0 failed-to-prove transformations
+  0 Alive2 errors

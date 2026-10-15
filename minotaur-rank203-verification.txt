@@ -1,0 +1,25 @@
+
+----------------------------------------
+define i1 @cut(i64 %n6, i16 %n7) {
+#0:
+  %n0 = mul i64 %n6, 72
+  %n1 = add i64 %n0, 87
+  %n2 = and i64 %n1, -16
+  %n3 = add i64 %n6, 17
+  %n4 = add i64 %n3, %n2
+  %n5 = icmp eq i64 %n4, 0
+  ret i1 %n5
+}
+=>
+define i1 @cut(i64 %n6, i16 %n7) {
+#0:
+  %r = icmp eq i64 %n6, 2021560994379128943
+  ret i1 %r
+}
+Transformation seems to be correct!
+
+Summary:
+  1 correct transformations
+  0 incorrect transformations
+  0 failed-to-prove transformations
+  0 Alive2 errors
